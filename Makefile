@@ -1,7 +1,7 @@
 include config.mk
 
-cflags := -Isrc/brogue -Isrc/platform -std=c99 \
-	-Wall -Wpedantic -Werror=implicit -Wno-parentheses -Wno-unused-result -Wno-format
+cflags := -Isrc/brogue -Isrc/platform -std=c17 \
+	-Wall -Wpedantic -Werror -Wno-parentheses -Wno-unused-result -Wno-format
 libs := -lm
 cppflags := -DDATADIR=$(DATADIR)
 
@@ -33,7 +33,7 @@ ifeq ($(DEBUG),YES)
 	cflags += -g
 	cppflags += -DENABLE_PLAYBACK_SWITCH
 else
-	cflags += -O2
+	cflags += -O2 -g
 endif
 
 objects := $(sources:.c=.o)

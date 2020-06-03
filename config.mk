@@ -1,3 +1,7 @@
+# compiler gcc or clang
+# Consider llvm-mingw for windows: https://github.com/mstorsjo/llvm-mingw
+CC := clang
+
 # Where to look for game data files (found in 'bin'). Must be without trailing slashes!
 DATADIR := .
 
