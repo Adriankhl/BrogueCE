@@ -17,7 +17,25 @@ ifeq ($(GRAPHICS),YES)
 	sources += $(addprefix src/platform/,sdl2-platform.c)
 	cflags += $(shell $(SDL_CONFIG) --cflags)
 	cppflags += -DBROGUE_SDL
-	libs += $(shell $(SDL_CONFIG) --libs) -lSDL2_image
+	sdllibs := $(shell $(SDL_CONFIG) --libs) -lSDL2_image
+
+	# Windows only
+	mingwlibs := -ltiff \
+		-lpng \
+		-ljpeg \
+		-lwebp \
+		-llzma \
+		-lzstd \
+		-lz \
+		-lwinmm \
+		-lole32 \
+		-loleaut32 \
+		-lsetupapi \
+		-lImm32 \
+		-lVersion 
+	sdlstaticlibs := -lSDL2_image \
+		$(shell sdl2-config --static-libs) \
+		$(mingwlibs) 
 endif
 
 ifeq ($(WEBBROGUE),YES)
@@ -44,13 +62,13 @@ objects := $(sources:.c=.o)
 	$(CC) $(cppflags) $(CPPFLAGS) $(cflags) $(CFLAGS) -c $< -o $@
 
 bin/brogue: $(objects)
-	$(CC) $(cflags) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(libs) $(LDLIBS)
+	$(CC) $(cflags) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(sdllibs) $(libs) $(LDLIBS)
 
 windows/icon.o: windows/icon.rc
 	windres $< $@
 
 bin/brogue.exe: $(objects) windows/icon.o
-	$(CC) $(cflags) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(libs) $(LDLIBS)
+	$(CC) $(cflags) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(sdlstaticlibs) $(libs) $(LDLIBS) -static
 
 clean:
 	$(RM) src/brogue/*.o src/platform/*.o bin/brogue{,.exe}
