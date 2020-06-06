@@ -9,7 +9,7 @@ sources := $(wildcard src/brogue/*.c) $(addprefix src/platform/,main.c platformd
 
 ifeq ($(TERMINAL),YES)
 	sources += $(addprefix src/platform/,curses-platform.c term.c)
-	cppflags += -DBROGUE_CURSES
+	cppflags += -DBROGUE_CURSES -D_POSIX_C_SOURCE=199309L
 	libs += -lncurses
 endif
 
